@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hule Login</title>
+
+    <!-- Jquery cdn-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
+        <link rel="stylesheet" href="/login_page/style.css">
+</head>
+
+<body>
+    <form id="login-form">
+        <!-- Header for the form -->
+        <div class="header">
+            <img src="/resources/images/logo.jpg" alt="hule logo">
+            <h2>Log In</h2>
+        </div>
+
+        <!-- Email Input -->
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" placeholder="example@hule.com">
+
+        <!-- Password Input -->
+        <label for="email">Password:</label>
+        <input type="password" name="password" id="password">
+
+        <!-- Login Button -->
+        <input type="submit" click="login()" class="login-btn btn" value="Log In">
+    </form>
+
+
+    <script>
+
+        $("#login-form").on('submit', (e) => login(e))
+
+        function login(e) {
+
+            e.preventDefault()
+
+            // Get user inputs
+            let email = $("#email").val()
+            let password = $("#password").val()
+
+            // Ajax call to api version one
+            $.post({
+                url: '/api/v1/auth/login',
+                dataType: "json",
+                type: "post",
+                contentType: "application/json",
+                data: JSON.stringify({ "email": email, "password": password }),
+                processData: false,
+                success: function (data, textStatus, jQxhr) {
+                    data.accessToken && localStorage.setItem('accessToken', data.accessToken)
+                    data.accessToken && localStorage.setItem('userId', data.others._id)
+                    data.accessToken && localStorage.setItem('email', data.others.email)
+                    // window.location.href = "/metadata page/metadata.html";
+
+                },
+                error: function (jqxhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    alert("Wrong Credientials!")
+                    // $("#email").val("");
+                    // $("#password").val("")
+                }
+            })
+
+        }
+
+    </script>
+</body>
+
+</html>
